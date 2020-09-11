@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Authors>VoidX</Authors>
+    <Company>VoidX</Company>
+    <PackageProjectUrl>http://en.sbence.hu</PackageProjectUrl>
+    <Description>Downloads all files from an FTP server after a given date and time.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Code\FreshTreePuller\FreshTreePuller\FreshTreePuller.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>
