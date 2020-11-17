@@ -57,6 +57,8 @@ namespace FreshTreePuller.FTP {
         /// <param name="entry">Remote file entry</param>
         /// <param name="outputPath">Full output path and file name</param>
         void ManualDownload(TreeEntry entry, string outputPath) {
+            if (File.Exists(outputPath) && new FileInfo(outputPath).Length == entry.Size)
+                return; // Skip already downloaded files
             FileDownload downloader = new FileDownload(entry.RequestURI, outputPath, credentials) {
                 reporter = DownloadProgress
             };

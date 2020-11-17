@@ -51,7 +51,7 @@ namespace FreshTreePuller.FTP {
         /// </summary>
         public string Group { get; set; }
         /// <summary>
-        /// File size.
+        /// File size in bytes.
         /// </summary>
         public long Size { get; set; }
         /// <summary>
