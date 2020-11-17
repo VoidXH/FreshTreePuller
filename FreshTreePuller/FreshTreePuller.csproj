@@ -8,6 +8,7 @@
     <Company>VoidX</Company>
     <PackageProjectUrl>http://en.sbence.hu</PackageProjectUrl>
     <Description>Downloads all files from an FTP server after a given date and time.</Description>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
