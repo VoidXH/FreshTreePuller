@@ -49,7 +49,7 @@ namespace FreshTreePuller {
         /// <summary>
         /// Connect to the selected FTP server.
         /// </summary>
-        void Connect(object sender, RoutedEventArgs e) {
+        void Connect(object _, RoutedEventArgs e) {
             NetworkCredential credentials = new NetworkCredential(user.Text, password.Password);
             remote.SetCrawler(new RemoteCrawler(server.Text, credentials));
             remote.SetupDownload(local, credentials);
@@ -68,7 +68,7 @@ namespace FreshTreePuller {
         /// <summary>
         /// Enter the data of the selected preset to the connection fields.
         /// </summary>
-        void LoadPreset(object sender, RoutedEventArgs e) {
+        void LoadPreset(object _, RoutedEventArgs e) {
             if (presets.SelectedItem == null)
                 return;
             Preset preset = (Preset)presets.SelectedItem;
@@ -80,7 +80,7 @@ namespace FreshTreePuller {
         /// <summary>
         /// Save the connection fields' data to a preset.
         /// </summary>
-        void SavePreset(object sender, RoutedEventArgs e) {
+        void SavePreset(object _, RoutedEventArgs e) {
             Preset preset = new Preset(server.Text, user.Text, password.Password);
             presetData.Add(preset);
             ResetPresets();
@@ -90,7 +90,7 @@ namespace FreshTreePuller {
         /// <summary>
         /// Delete a saved preset.
         /// </summary>
-        void DeletePreset(object sender, RoutedEventArgs e) {
+        void DeletePreset(object _, RoutedEventArgs e) {
             Preset preset = (Preset)presets.SelectedItem;
             presetData.Remove(preset.server, preset.username);
             ResetPresets();
@@ -99,7 +99,7 @@ namespace FreshTreePuller {
         /// <summary>
         /// Download all files from the server last modified after <see cref="getAfter"/>.
         /// </summary>
-        void DownloadAllAfter(object sender, RoutedEventArgs e) {
+        void DownloadAllAfter(object _, RoutedEventArgs e) {
             if (getAfter.SelectedDate.HasValue) {
                 DateTime after = getAfter.SelectedDate.Value.AddMinutes(hours.Value * 60 + minutes.Value);
                 taskEngine.Run(() => {
@@ -115,9 +115,27 @@ namespace FreshTreePuller {
         }
 
         /// <summary>
+        /// Cancel the running download if one is in progress.
+        /// </summary>
+        void NextFile(object _, RoutedEventArgs e) {
+            if (!taskEngine.IsOperationRunning)
+                MessageBox.Show("This button skips a download. There is no download in progress.");
+            remote.CancelCurrent();
+        }
+
+        /// <summary>
+        /// Cancel current and queued downloads.
+        /// </summary>
+        void CancelOperation(object _, RoutedEventArgs e) {
+            if (!taskEngine.IsOperationRunning)
+                MessageBox.Show("This button cancels all queued downloads. There is no download in progress.");
+            remote.CancelAll();
+        }
+
+        /// <summary>
         /// Save all data before exiting.
         /// </summary>
-        void Window_Closed(object sender, EventArgs e) {
+        void Window_Closed(object _, EventArgs e) {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             KeyValueConfigurationCollection settings = configFile.AppSettings.Settings;
             SetSetting(settings, "server", server.Text);

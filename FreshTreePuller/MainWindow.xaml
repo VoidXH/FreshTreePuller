@@ -62,8 +62,18 @@
         </Grid>
         <Grid Grid.Row="2">
             <StatusBar>
-                <ProgressBar x:Name="progressBar" Height="10" Width="100" Maximum="1"/>
-                <Label x:Name="progressLabel" FontSize="10" Padding="0"/>
+                <StatusBarItem>
+                    <ProgressBar x:Name="progressBar" Height="10" Width="100" Maximum="1"/>
+                </StatusBarItem>
+                <StatusBarItem>
+                    <Label x:Name="progressLabel" FontSize="10" Padding="0"/>
+                </StatusBarItem>
+                <StatusBarItem HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Next" FontSize="10" Padding="5 0" Click="NextFile"/>
+                        <Button Content="Cancel" FontSize="10" Margin="5 0 0 0" Padding="5 0" Click="CancelOperation"/>
+                    </StackPanel>
+                </StatusBarItem>
             </StatusBar>
         </Grid>
     </Grid>

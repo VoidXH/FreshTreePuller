@@ -17,6 +17,8 @@ namespace FreshTreePuller.FTP {
         readonly NetworkCredential credentials;
         readonly long size;
 
+        bool cancel;
+
         /// <summary>
         /// FTP file download handler.
         /// </summary>
@@ -33,21 +35,33 @@ namespace FreshTreePuller.FTP {
         }
 
         /// <summary>
+        /// Cancel the download in progress.
+        /// </summary>
+        public void Cancel() => cancel = true;
+
+        /// <summary>
         /// Download the set file.
         /// </summary>
         public void Download() {
             WebRequest request = WebRequest.Create(uri);
             request.Credentials = credentials;
             request.Method = WebRequestMethods.Ftp.DownloadFile;
-            using Stream ftp = request.GetResponse().GetResponseStream(), file = File.Create(saveAs);
+            using Stream ftp = request.GetResponse().GetResponseStream();
+            FileStream file = File.Create(saveAs);
             byte[] buffer = new byte[10240];
             int read;
             DateTime started = DateTime.Now;
             while ((read = ftp.Read(buffer, 0, buffer.Length)) > 0) {
+                if (cancel) {
+                    file.Close();
+                    File.Delete(saveAs);
+                    return;
+                }
                 file.Write(buffer, 0, read);
                 reporter?.Invoke(file.Position / (double)size, started);
             }
             reporter?.Invoke(1, started);
+            file.Close();
         }
     }
 }

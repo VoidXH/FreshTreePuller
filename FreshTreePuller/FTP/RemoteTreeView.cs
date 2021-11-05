@@ -13,6 +13,14 @@ namespace FreshTreePuller.FTP {
         private static readonly TimeSpan day = TimeSpan.FromDays(1), hour = TimeSpan.FromHours(1);
 
         /// <summary>
+        /// Cancel the queue.
+        /// </summary>
+        bool cancel;
+        /// <summary>
+        /// The active download.
+        /// </summary>
+        FileDownload downloader;
+        /// <summary>
         /// Filesystem browser used to mark the target download location.
         /// </summary>
         FilesystemTreeView localFilesystem;
@@ -31,6 +39,19 @@ namespace FreshTreePuller.FTP {
         public void SetupDownload(FilesystemTreeView localFilesystem, NetworkCredential credentials) {
             this.localFilesystem = localFilesystem;
             this.credentials = credentials;
+        }
+
+        /// <summary>
+        /// Cancel the running download if one is in progress.
+        /// </summary>
+        public void CancelCurrent() {
+            if (downloader != null)
+                downloader.Cancel();
+        }
+
+        public void CancelAll() {
+            CancelCurrent();
+            cancel = true;
         }
 
         /// <summary>
@@ -59,7 +80,7 @@ namespace FreshTreePuller.FTP {
         void ManualDownload(TreeEntry entry, string outputPath) {
             if (File.Exists(outputPath) && new FileInfo(outputPath).Length == entry.Size)
                 return; // Skip already downloaded files
-            FileDownload downloader = new FileDownload(entry.RequestURI, outputPath, credentials) {
+            downloader = new FileDownload(entry.RequestURI, outputPath, credentials) {
                 reporter = DownloadProgress
             };
             downloading = entry.Name;
@@ -74,6 +95,8 @@ namespace FreshTreePuller.FTP {
         /// <param name="outputPath">Folder output on the local filesystem, should end with a backslash</param>
         /// <param name="after">Only download files after this date</param>
         void ManualDownloadRecursive(FilesystemItem item, string outputPath, DateTime after) {
+            if (cancel)
+                return;
             TreeEntry entry;
             ItemCollection items = null;
             if (item == null) {
@@ -119,8 +142,10 @@ namespace FreshTreePuller.FTP {
                 MessageBox.Show("Please select the output folder on the local filesystem browser, then retry this download.");
                 return;
             }
-            if (!entry.IsDirectory)
+            if (!entry.IsDirectory) {
+                cancel = false;
                 taskEngine.Run(() => ManualDownload(entry, string.Format("{0}\\{1}", targetParent.URI, downloading = entry.Name)));
+            }
             base.OnMouseDoubleClick(e);
         }
 
@@ -133,9 +158,13 @@ namespace FreshTreePuller.FTP {
                 MessageBox.Show("Please select the output folder on the local filesystem browser, then retry this download.");
                 return;
             }
+            cancel = false;
             ManualDownloadRecursive(null, string.Format(output.URI + '\\'), after);
-            taskEngine.UpdateProgressBar(1);
-            taskEngine.UpdateStatus("Latest files downloaded.");
+            if (!cancel) {
+                taskEngine.UpdateProgressBar(1);
+                taskEngine.UpdateStatus("Latest files downloaded.");
+            } else
+                taskEngine.UpdateStatus("Process cancelled.");
         }
     }
 }
