@@ -12,8 +12,8 @@ namespace FreshTreePuller {
     /// Interaction logic for FreshTreePuller.
     /// </summary>
     public partial class MainWindow : Window {
-        readonly PresetDB presetData = new PresetDB();
-        readonly TaskEngine taskEngine = new TaskEngine();
+        readonly PresetDB presetData = new();
+        readonly TaskEngine taskEngine = new();
 
         /// <summary>
         /// Update the display list of presets.

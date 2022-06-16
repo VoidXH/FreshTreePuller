@@ -8,6 +8,11 @@ namespace FreshTreePuller.FTP {
     /// </summary>
     public class FileDownload {
         /// <summary>
+        /// Timeout length of a query in milliseconds.
+        /// </summary>
+        const int timeout = 10000;
+
+        /// <summary>
         /// Called after every block write. Ratio of transferred and total data.
         /// </summary>
         public Action<double, DateTime> reporter;
@@ -31,6 +36,7 @@ namespace FreshTreePuller.FTP {
             WebRequest request = WebRequest.Create(uri);
             request.Credentials = this.credentials = credentials;
             request.Method = WebRequestMethods.Ftp.GetFileSize;
+            request.Timeout = timeout;
             size = request.GetResponse().ContentLength;
         }
 
@@ -46,12 +52,20 @@ namespace FreshTreePuller.FTP {
             WebRequest request = WebRequest.Create(uri);
             request.Credentials = credentials;
             request.Method = WebRequestMethods.Ftp.DownloadFile;
+            request.Timeout = timeout;
             using Stream ftp = request.GetResponse().GetResponseStream();
             FileStream file = File.Create(saveAs);
             byte[] buffer = new byte[10240];
             int read;
             DateTime started = DateTime.Now;
-            while ((read = ftp.Read(buffer, 0, buffer.Length)) > 0) {
+            while (true) {
+                try {
+                    read = ftp.Read(buffer, 0, buffer.Length);
+                } catch {
+                    break;
+                }
+                if (read <= 0)
+                    break;
                 if (cancel) {
                     file.Close();
                     File.Delete(saveAs);
