@@ -22,8 +22,9 @@ namespace FreshTreePuller.FTP {
         public void SetCrawler(Crawler crawler) {
             Items.Clear();
             List<TreeEntry> result = crawler.ListFolder();
-            foreach (TreeEntry entry in result)
+            foreach (TreeEntry entry in result) {
                 Items.Add(new FilesystemItem(crawler, entry));
+            }
         }
 
         /// <summary>

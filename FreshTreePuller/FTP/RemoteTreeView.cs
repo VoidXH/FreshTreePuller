@@ -45,8 +45,9 @@ namespace FreshTreePuller.FTP {
         /// Cancel the running download if one is in progress.
         /// </summary>
         public void CancelCurrent() {
-            if (downloader != null)
+            if (downloader != null) {
                 downloader.Cancel();
+            }
         }
 
         public void CancelAll() {
@@ -62,12 +63,14 @@ namespace FreshTreePuller.FTP {
             TimeSpan elapsed = DateTime.Now - started, estimatedDownloadTime = elapsed / progress, remaining = estimatedDownloadTime - elapsed;
             string remDisp;
             if (remaining < day) {
-                if (remaining < hour)
+                if (remaining < hour) {
                     remDisp = remaining.ToString("mm':'ss");
-                else
+                } else {
                     remDisp = remaining.ToString("h':'mm':'ss");
-            } else
+                }
+            } else {
                 remDisp = remaining.ToString("d':'hh':'mm':'ss");
+            }
             taskEngine.UpdateStatusLazy(string.Format("Downloading ({0}, {1} remaining) {2}...", progress.ToString("0.00%"),
                 remDisp, downloading));
         }
@@ -78,8 +81,9 @@ namespace FreshTreePuller.FTP {
         /// <param name="entry">Remote file entry</param>
         /// <param name="outputPath">Full output path and file name</param>
         void ManualDownload(TreeEntry entry, string outputPath) {
-            if (File.Exists(outputPath) && new FileInfo(outputPath).Length == entry.Size)
+            if (File.Exists(outputPath) && new FileInfo(outputPath).Length == entry.Size) {
                 return; // Skip already downloaded files
+            }
             downloader = new FileDownload(entry.RequestURI, outputPath, credentials) {
                 reporter = DownloadProgress
             };
@@ -95,8 +99,9 @@ namespace FreshTreePuller.FTP {
         /// <param name="outputPath">Folder output on the local filesystem, should end with a backslash</param>
         /// <param name="after">Only download files after this date</param>
         void ManualDownloadRecursive(FilesystemItem item, string outputPath, DateTime after) {
-            if (cancel)
+            if (cancel) {
                 return;
+            }
             TreeEntry entry;
             ItemCollection items = null;
             if (item == null) {
@@ -109,25 +114,29 @@ namespace FreshTreePuller.FTP {
                 taskEngine.UpdateProgressBar(.5);
                 Dispatcher.Invoke(() => {
                     entry = (TreeEntry)item.Header;
-                    if (entry.IsDirectory)
+                    if (entry.IsDirectory) {
                         taskEngine.UpdateStatus(string.Format("Expanding {0}...", entry));
+                    }
                     item.IsExpanded = true;
                     items = item.Items;
                 });
             }
             if (entry.IsDirectory) {
                 outputPath = string.Format("{0}{1}\\", outputPath, entry.Name);
-                for (int i = 0, c = items.Count; i < c; ++i)
+                for (int i = 0, c = items.Count; i < c; ++i) {
                     ManualDownloadRecursive((FilesystemItem)items[i], outputPath, after);
+                }
             } else {
-                if (entry.LastModified < after)
+                if (entry.LastModified < after) {
                     return;
+                }
                 new DirectoryInfo(outputPath).Create();
                 ManualDownload(entry, outputPath + entry.Name);
             }
             Dispatcher.Invoke(() => {
-                if (item != null && item.IsExpanded)
+                if (item != null && item.IsExpanded) {
                     item.IsExpanded = false;
+                }
             });
         }
 
@@ -135,8 +144,9 @@ namespace FreshTreePuller.FTP {
         /// Download the selected file when double clicked.
         /// </summary>
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e) {
-            if (SelectedItem == null)
+            if (SelectedItem == null) {
                 return;
+            }
             TreeEntry entry = SelectedEntry, targetParent = localFilesystem.SelectedEntry;
             if (targetParent == null) {
                 MessageBox.Show("Please select the output folder on the local filesystem browser, then retry this download.");
@@ -163,8 +173,9 @@ namespace FreshTreePuller.FTP {
             if (!cancel) {
                 taskEngine.UpdateProgressBar(1);
                 taskEngine.UpdateStatus("Latest files downloaded.");
-            } else
+            } else {
                 taskEngine.UpdateStatus("Process cancelled.");
+            }
         }
     }
 }

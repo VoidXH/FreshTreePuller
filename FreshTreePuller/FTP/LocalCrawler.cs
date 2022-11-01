@@ -14,8 +14,9 @@ namespace FreshTreePuller.FTP {
             List<TreeEntry> result = new List<TreeEntry>();
             if (folder != null) {
                 string path = folder.URI;
-                if (!path.EndsWith('\\'))
+                if (!path.EndsWith('\\')) {
                     path += '\\';
+                }
                 string[] folders;
                 try {
                     folders = Directory.GetDirectories(path);

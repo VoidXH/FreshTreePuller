@@ -40,8 +40,9 @@ namespace FreshTreePuller {
         /// Set the status text label, if it's given.
         /// </summary>
         public void UpdateStatus(string text) {
-            if (progressLabel != null)
+            if (progressLabel != null) {
                 progressLabel.Dispatcher.Invoke(() => progressLabel.Content = text);
+            }
         }
 
         /// <summary>

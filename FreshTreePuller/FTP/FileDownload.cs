@@ -33,11 +33,17 @@ namespace FreshTreePuller.FTP {
         public FileDownload(string uri, string saveAs, NetworkCredential credentials) {
             this.uri = uri;
             this.saveAs = saveAs;
+
             WebRequest request = WebRequest.Create(uri);
             request.Credentials = this.credentials = credentials;
             request.Method = WebRequestMethods.Ftp.GetFileSize;
             request.Timeout = timeout;
-            size = request.GetResponse().ContentLength;
+            for (int i = 0; i < maxRetries; i++) {
+                try {
+                    size = request.GetResponse().ContentLength;
+                    break;
+                } catch { }
+            }
         }
 
         /// <summary>
@@ -48,7 +54,7 @@ namespace FreshTreePuller.FTP {
         /// <summary>
         /// Download the set file.
         /// </summary>
-        public void Download() {
+        public void Download(int retryCount = 0) {
             WebRequest request = WebRequest.Create(uri);
             request.Credentials = credentials;
             request.Method = WebRequestMethods.Ftp.DownloadFile;
@@ -62,7 +68,14 @@ namespace FreshTreePuller.FTP {
                 try {
                     read = ftp.Read(buffer, 0, buffer.Length);
                 } catch {
-                    break;
+                    if (file.Position == size) {
+                        break;
+                    }
+                    if (retryCount < maxRetries) {
+                        file.Close();
+                        Download(retryCount + 1);
+                    }
+                    return;
                 }
                 if (read <= 0)
                     break;
@@ -77,5 +90,10 @@ namespace FreshTreePuller.FTP {
             reporter?.Invoke(1, started);
             file.Close();
         }
+
+        /// <summary>
+        /// Maximum retry count.
+        /// </summary>
+        const int maxRetries = 3;
     }
 }

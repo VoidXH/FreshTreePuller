@@ -40,10 +40,11 @@ namespace FreshTreePuller {
             /// </summary>
             public int CompareTo(Preset other) {
                 int result = string.Compare(server, other.server);
-                if (result != 0)
+                if (result != 0) {
                     return result;
-                else
+                } else {
                     return string.Compare(username, other.username);
+                }
             }
 
             /// <summary>
@@ -126,8 +127,9 @@ namespace FreshTreePuller {
         /// Read the collection from an XML file.
         /// </summary>
         public void Deserialize(string fileName) {
-            if (!File.Exists(fileName))
+            if (!File.Exists(fileName)) {
                 return;
+            }
             XmlSerializer serializer = new XmlSerializer(typeof(PresetDB));
             FileStream reader = new FileStream(fileName, FileMode.Open);
             Presets = ((PresetDB)serializer.Deserialize(reader)).Presets;

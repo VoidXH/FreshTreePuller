@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Diagnostics;
 using System.Net;
 using System.Windows;
 
@@ -20,10 +21,12 @@ namespace FreshTreePuller {
         /// </summary>
         void ResetPresets() {
             presets.Items.Clear();
-            foreach (Preset preset in presetData)
+            foreach (Preset preset in presetData) {
                 presets.Items.Add(preset);
-            if (presets.Items.Count != 0)
+            }
+            if (presets.Items.Count != 0) {
                 presets.SelectedIndex = 0;
+            }
         }
 
         /// <summary>
@@ -35,8 +38,9 @@ namespace FreshTreePuller {
             server.Text = settings["server"] ?? string.Empty;
             user.Text = settings["user"] ?? string.Empty;
             password.Password = settings["password"] ?? string.Empty;
-            if (settings["getAfter"] != null)
+            if (settings["getAfter"] != null) {
                 getAfter.SelectedDate = new DateTime(long.Parse(settings["getAfter"]));
+            }
             hours.Value = int.Parse(settings["hours"] ?? "12");
             minutes.Value = int.Parse(settings["minutes"] ?? "0");
             presetData.Deserialize("FTP Presets.xml");
@@ -59,18 +63,20 @@ namespace FreshTreePuller {
         /// Set a setting or create its entry if it doesn't exist.
         /// </summary>
         static void SetSetting(KeyValueConfigurationCollection settings, string key, string value) {
-            if (settings[key] == null)
+            if (settings[key] == null) {
                 settings.Add(key, value);
-            else
+            } else {
                 settings[key].Value = value;
+            }
         }
 
         /// <summary>
         /// Enter the data of the selected preset to the connection fields.
         /// </summary>
         void LoadPreset(object _, RoutedEventArgs e) {
-            if (presets.SelectedItem == null)
+            if (presets.SelectedItem == null) {
                 return;
+            }
             Preset preset = (Preset)presets.SelectedItem;
             server.Text = preset.server;
             user.Text = preset.username;
@@ -118,8 +124,9 @@ namespace FreshTreePuller {
         /// Cancel the running download if one is in progress.
         /// </summary>
         void NextFile(object _, RoutedEventArgs e) {
-            if (!taskEngine.IsOperationRunning)
+            if (!taskEngine.IsOperationRunning) {
                 MessageBox.Show("This button skips a download. There is no download in progress.");
+            }
             remote.CancelCurrent();
         }
 
@@ -127,8 +134,9 @@ namespace FreshTreePuller {
         /// Cancel current and queued downloads.
         /// </summary>
         void CancelOperation(object _, RoutedEventArgs e) {
-            if (!taskEngine.IsOperationRunning)
+            if (!taskEngine.IsOperationRunning) {
                 MessageBox.Show("This button cancels all queued downloads. There is no download in progress.");
+            }
             remote.CancelAll();
         }
 
@@ -141,12 +149,23 @@ namespace FreshTreePuller {
             SetSetting(settings, "server", server.Text);
             SetSetting(settings, "user", user.Text);
             SetSetting(settings, "password", password.Password);
-            if (getAfter.SelectedDate.HasValue)
+            if (getAfter.SelectedDate.HasValue) {
                 SetSetting(settings, "getAfter", getAfter.SelectedDate.Value.Ticks.ToString());
+            }
             SetSetting(settings, "hours", hours.Value.ToString());
             SetSetting(settings, "minutes", minutes.Value.ToString());
             configFile.Save(ConfigurationSaveMode.Modified);
             presetData.Serialize("FTP Presets.xml");
+        }
+
+        /// <summary>
+        /// Opens the developer's website.
+        /// </summary>
+        void Ad(object _, RoutedEventArgs e) {
+            Process.Start(new ProcessStartInfo() {
+                FileName = "http://en.sbence.hu/",
+                UseShellExecute = true
+            });
         }
     }
 }

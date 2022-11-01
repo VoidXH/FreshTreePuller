@@ -13,24 +13,30 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <GroupBox Header="Connection" Margin="10,10,0,0" Width="217" HorizontalAlignment="Left" Height="126" VerticalAlignment="Top">
+        <Button Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="by VoidX" Click="Ad"/>
+        <TextBlock Margin="0,35,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Text="v1.1.2"/>
+        <GroupBox Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="217" Height="126" Header="Connection">
             <Grid>
-                <Label Content="Server:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" Padding="5,0,5,0"/>
-                <TextBox x:Name="server" Margin="77,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                <Label Content="User:" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top" Padding="5,0,5,0"/>
-                <TextBox x:Name="user" Margin="77,33,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                <Label Content="Password:" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" Padding="5,0,5,0"/>
+                <TextBlock Margin="10,11,0,0" Padding="5,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Server:"/>
+                <TextBox x:Name="server" Margin="77,10,10,0" VerticalAlignment="Top"/>
+                <TextBlock Margin="10,34,0,0" Padding="5,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="User:"/>
+                <TextBox x:Name="user" Margin="77,33,10,0" VerticalAlignment="Top"/>
+                <TextBlock Margin="10,57,0,0" Padding="5,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Password:"/>
                 <PasswordBox x:Name="password" Margin="77,56,10,0" VerticalAlignment="Top"/>
-                <Button Content="Connect" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Click="Connect" Width="100"/>
+                <Button Margin="10,79,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100"
+                        Content="Connect"  Click="Connect"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Presets" Margin="232,10,0,0" Width="217" Height="112" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <GroupBox Margin="232,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="217" Height="112" Header="Presets">
             <Grid>
-                <Label Content="Preset:" HorizontalAlignment="Left" Margin="10,13,0,0" VerticalAlignment="Top" Padding="5,0,5,0"/>
+                <Label Margin="10,13,0,0" Padding="5,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Preset:"/>
                 <ComboBox x:Name="presets" Margin="60,10,10,0" VerticalAlignment="Top"/>
-                <Button Content="Load selected" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="90" Click="LoadPreset"/>
-                <Button Content="Delete selected" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="90" Click="DeletePreset"/>
-                <Button Content="Save current" HorizontalAlignment="Right" Margin="0,37,10,0" VerticalAlignment="Top" Width="90" Click="SavePreset"/>
+                <Button Margin="10,37,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90"
+                        Content="Load selected" Click="LoadPreset"/>
+                <Button Margin="10,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90"
+                        Content="Delete selected" Click="DeletePreset"/>
+                <Button Margin="0,37,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="90"
+                        Content="Save current" Click="SavePreset"/>
             </Grid>
         </GroupBox>
         <Grid Grid.Row="1">
@@ -46,32 +52,36 @@
                     </HierarchicalDataTemplate>
                 </ftp:FilesystemTreeView.ItemTemplate>
             </ftp:FilesystemTreeView>
-            <TextBlock Margin="10,16,10,0" Text="Local" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right"/>
-            <ftp:RemoteTreeView Grid.Column="2" x:Name="remote" Margin="0,41,0,0">
+            <TextBlock Margin="0,16,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Text="Local"/>
+            <ftp:RemoteTreeView x:Name="remote" Grid.Column="2" Margin="0,41,0,0">
                 <ftp:RemoteTreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type ftp:FilesystemItem}">
                         <TextBlock Text="{Binding Name}" />
                     </HierarchicalDataTemplate>
                 </ftp:RemoteTreeView.ItemTemplate>
             </ftp:RemoteTreeView>
-            <TextBlock Grid.Column="2" Margin="10,16,10,0" Text="Remote" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <Button Content="Download all after" Grid.Column="2" Margin="0,14,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="108" Click="DownloadAllAfter"/>
-            <DatePicker x:Name="getAfter" Margin="0,12,205,0" VerticalAlignment="Top" FirstDayOfWeek="Monday" Grid.Column="2" HorizontalAlignment="Right" Width="110"/>
-            <local:NumericUpDown x:Name="hours" Grid.Column="2" Height="20" VerticalAlignment="Top" Value="12" Maximum="23" Margin="0,14,164,0" HorizontalAlignment="Right" Width="36" Minimum="0"/>
-            <local:NumericUpDown x:Name="minutes" Grid.Column="2" Height="20" VerticalAlignment="Top" Maximum="59" Margin="0,14,123,0" HorizontalAlignment="Right" Width="36" Minimum="0"/>
+            <TextBlock Grid.Column="2" Margin="10,16,10,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Remote"/>
+            <Button Grid.Column="2" Margin="0,14,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="108"
+                    Content="Download all after" Click="DownloadAllAfter"/>
+            <DatePicker x:Name="getAfter" Grid.Column="2" Margin="0,12,205,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Width="110" FirstDayOfWeek="Monday"/>
+            <local:NumericUpDown x:Name="hours" Grid.Column="2" Margin="0,14,164,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                 Width="36"  Height="20" Minimum="0" Value="12" Maximum="23"/>
+            <local:NumericUpDown x:Name="minutes" Grid.Column="2" Margin="0,14,123,0" HorizontalAlignment="Right"
+                                 VerticalAlignment="Top" Width="36" Height="20" Minimum="0" Maximum="59"/>
         </Grid>
         <Grid Grid.Row="2">
             <StatusBar>
                 <StatusBarItem>
-                    <ProgressBar x:Name="progressBar" Height="10" Width="100" Maximum="1"/>
+                    <ProgressBar x:Name="progressBar" Width="100" Height="10" Maximum="1"/>
                 </StatusBarItem>
                 <StatusBarItem>
-                    <Label x:Name="progressLabel" FontSize="10" Padding="0"/>
+                    <Label x:Name="progressLabel" Padding="0" FontSize="10"/>
                 </StatusBarItem>
                 <StatusBarItem HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Next" FontSize="10" Padding="5 0" Click="NextFile"/>
-                        <Button Content="Cancel" FontSize="10" Margin="5 0 0 0" Padding="5 0" Click="CancelOperation"/>
+                        <Button Padding="5 0" Content="Next" FontSize="10" Click="NextFile"/>
+                        <Button Margin="5 0 0 0" Padding="5 0" Content="Cancel" FontSize="10" Click="CancelOperation"/>
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>
