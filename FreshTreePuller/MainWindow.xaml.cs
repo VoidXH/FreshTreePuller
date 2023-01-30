@@ -54,7 +54,7 @@ namespace FreshTreePuller {
         /// Connect to the selected FTP server.
         /// </summary>
         void Connect(object _, RoutedEventArgs e) {
-            NetworkCredential credentials = new NetworkCredential(user.Text, password.Password);
+            NetworkCredential credentials = new(user.Text, password.Password);
             remote.SetCrawler(new RemoteCrawler(server.Text, credentials));
             remote.SetupDownload(local, credentials);
         }
@@ -81,13 +81,18 @@ namespace FreshTreePuller {
             server.Text = preset.server;
             user.Text = preset.username;
             password.Password = preset.password;
+            if (preset.lastDownload != DateTime.MinValue) {
+                getAfter.SelectedDate = preset.lastDownload.Date;
+                hours.Value = preset.lastDownload.Hour;
+                minutes.Value = preset.lastDownload.Minute;
+            }
         }
 
         /// <summary>
         /// Save the connection fields' data to a preset.
         /// </summary>
         void SavePreset(object _, RoutedEventArgs e) {
-            Preset preset = new Preset(server.Text, user.Text, password.Password);
+            Preset preset = new(server.Text, user.Text, password.Password);
             presetData.Add(preset);
             ResetPresets();
             presets.SelectedItem = preset;
@@ -115,6 +120,14 @@ namespace FreshTreePuller {
                         DateTime now = DateTime.Now;
                         hours.Value = now.Hour;
                         minutes.Value = now.Minute;
+
+                        for (int i = 0, c = presetData.Count; i < c; i++) {
+                            if (presetData[i].server == server.Text) {
+                                Preset checkOut = presetData[i];
+                                checkOut.lastDownload = now;
+                                presetData[i] = checkOut;
+                            }
+                        }
                     });
                 });
             }

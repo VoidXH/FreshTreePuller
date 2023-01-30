@@ -27,12 +27,18 @@ namespace FreshTreePuller {
             public string password;
 
             /// <summary>
+            /// The last time the files were successfully downloaded from this server.
+            /// </summary>
+            public DateTime lastDownload;
+
+            /// <summary>
             /// Stored FTP login information.
             /// </summary>
             public Preset(string server, string username, string password) {
                 this.server = server;
                 this.username = username;
                 this.password = password;
+                lastDownload = DateTime.MinValue;
             }
 
             /// <summary>
@@ -61,7 +67,10 @@ namespace FreshTreePuller {
         /// <summary>
         /// Get the preset at the given index in this database.
         /// </summary>
-        public Preset this[int index] => Presets[index];
+        public Preset this[int index] {
+            get => Presets[index];
+            set => Presets[index] = value;
+        }
 
         /// <summary>
         /// Number of contained presets.
@@ -118,7 +127,7 @@ namespace FreshTreePuller {
         /// Export the collection to an XML file.
         /// </summary>
         public void Serialize(string fileName) {
-            XmlSerializer serializer = new XmlSerializer(typeof(PresetDB));
+            XmlSerializer serializer = new(typeof(PresetDB));
             TextWriter writer = new StreamWriter(fileName);
             serializer.Serialize(writer, this);
         }
@@ -130,8 +139,8 @@ namespace FreshTreePuller {
             if (!File.Exists(fileName)) {
                 return;
             }
-            XmlSerializer serializer = new XmlSerializer(typeof(PresetDB));
-            FileStream reader = new FileStream(fileName, FileMode.Open);
+            XmlSerializer serializer = new(typeof(PresetDB));
+            FileStream reader = new(fileName, FileMode.Open);
             Presets = ((PresetDB)serializer.Deserialize(reader)).Presets;
         }
     }

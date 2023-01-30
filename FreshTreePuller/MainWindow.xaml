@@ -14,7 +14,7 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Button Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="by VoidX" Click="Ad"/>
-        <TextBlock Margin="0,35,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Text="v1.1.2"/>
+        <TextBlock Margin="0,35,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Text="v1.1.3"/>
         <GroupBox Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="217" Height="126" Header="Connection">
             <Grid>
                 <TextBlock Margin="10,11,0,0" Padding="5,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Server:"/>
